@@ -1,15 +1,16 @@
 package br.com.tosin.serverrmi.models;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Book {
+public class Book implements Serializable {
 
 	private long id;
 	private String title;
 	private String author;
 	private boolean available;
 	private String abount;
-	private Calendar loan;
+	private long loan;
 
 	public long getId() {
 		return id;
@@ -33,7 +34,19 @@ public class Book {
 	}
 
 	public Calendar getLoan() {
-		return loan;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(loan);
+		return calendar;
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		String result = "";
+		result += "Autor: " + author;
+		result += " Titulo: " + title;
+		result += " Disponivel: " + (available ? "Sim" : "Não");
+		return result;
 	}
 
 }

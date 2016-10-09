@@ -1,11 +1,13 @@
 package br.com.tosin.serverrmi.utils;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.text.*;
 import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 
 import br.com.tosin.serverrmi.models.Book;
 
@@ -50,7 +52,12 @@ public class Util {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		List<Book> books = gson.fromJson(path, List.class);
+		
+		
+		Type listType = new TypeToken<ArrayList<Book>>(){}.getType();
+
+		List<Book> books = new Gson().fromJson(path, listType);
+		 
 		return books;
 	}
 	

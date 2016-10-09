@@ -23,6 +23,7 @@ public class Provider extends UnicastRemoteObject implements ServerInterface {
 	public void registerUser(User client, ClientInterface clientInterface) throws RemoteException {
 		// TODO Auto-generated method stub
 		Controller.getUsers().add(clientInterface);
+		System.out.println("num clientes: " + Controller.getUsers().size());
 	}
 
 	@Override

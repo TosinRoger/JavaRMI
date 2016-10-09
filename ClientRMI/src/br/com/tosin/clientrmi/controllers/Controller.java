@@ -16,7 +16,8 @@ public class Controller {
 		registerConnection();
 
 		try {
-			servidor.test("Essa eh minha mensagem de teste", user);
+//			servidor.test("Essa eh minha mensagem de teste", user);
+			servidor.registerUser(null, user);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
