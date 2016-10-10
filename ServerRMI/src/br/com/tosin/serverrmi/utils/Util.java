@@ -1,26 +1,24 @@
 package br.com.tosin.serverrmi.utils;
 
-import java.io.*;
-import java.lang.reflect.Type;
-import java.text.*;
-import java.util.*;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
-
-import br.com.tosin.serverrmi.models.Book;
+import br.com.tosin.models.ManagementBook;
 
 public class Util {
 
-	private static final long LOAN_TIME = 0;
+//	private static final long LOAN_TIME = 300000;
 	
 	/**
 	 * Retorna o timestamp do emprestimo
 	 * @param book
 	 * @return time > 0 esta atrasado, se time < 0 nao esta atrasado
 	 */
-	public static long bookDelayTime(Book book) {
+	public static long bookDelayTime(ManagementBook book) {
 		long delay = 0;
 		Calendar current = Calendar.getInstance();
 		
@@ -41,46 +39,66 @@ public class Util {
 		String date = dateFormat.format(calendar.getTime());
 		return date;
 	}
-	
-	public static List<Book> loadBooks() {
-		Gson gson = new Gson();
-		String path = "";
-		try {
-			path = openFile();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		Type listType = new TypeToken<ArrayList<Book>>(){}.getType();
 
-		List<Book> books = new Gson().fromJson(path, listType);
+	/**
+	 * Carrega os dados de uma base local
+	 * @return
+	 * @throws IOException
+	 */
+	public static List<ManagementBook> loadBooks() {
+//		String path = "";
+//		try {
+//			path = openFile();
+//			
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+
+
+//		Type typeFactory = new TypeToken<ArrayList<ManagementBook>>(){}.getType();
+//		final Gson gson = new GsonBuilder().registerTypeAdapterFactory((TypeAdapterFactory) typeFactory).create();
+		
+		
+		List<ManagementBook> books = null;
+		books = staticBook();
+//		books = gson.fromJson(path, typeFactory);
 		 
 		return books;
 	}
 	
-	private static String openFile() throws IOException {
-		String path = "src/database/base_book.json";
-		String result = "";
-		
-		BufferedReader br = new BufferedReader(new FileReader(path));
-		try {
-		    StringBuilder sb = new StringBuilder();
-		    String line = br.readLine();
+//	private static String openFile() throws IOException {
+//		String path = "src/database/base_book.json";
+//		String result = "";
+//		
+//		BufferedReader br = new BufferedReader(new FileReader(path));
+//		try {
+//		    StringBuilder sb = new StringBuilder();
+//		    String line = br.readLine();
+//
+//		    while (line != null) {
+//		        sb.append(line);
+//		        sb.append(System.lineSeparator());
+//		        line = br.readLine();
+//		    }
+//		    result = sb.toString();
+//		} finally {
+//		    br.close();
+//		}
+//		result = result.replaceAll("\n\r", "");
+//		result = result.replaceAll("\n", "");
+//		return result;
+//	}
 
-		    while (line != null) {
-		        sb.append(line);
-		        sb.append(System.lineSeparator());
-		        line = br.readLine();
-		    }
-		    result = sb.toString();
-		} finally {
-		    br.close();
-		}
-		result = result.replaceAll("\n\r", "");
-		result = result.replaceAll("\n", "");
-		return result;
+	private static List<ManagementBook> staticBook() {
+		List<ManagementBook> books = new ArrayList<>();
+		books.add(new ManagementBook(1, "titulo 1", "autor 1", "Historinha 1"));
+		books.add(new ManagementBook(2, "titulo 2", "autor 2", "Historinha 2"));
+		books.add(new ManagementBook(3, "titulo 3", "autor 3", "Historinha 3"));
+		books.add(new ManagementBook(4, "titulo 4", "autor 4", "Historinha 4"));
+		books.add(new ManagementBook(5, "titulo 5", "autor 5", "Historinha 5"));
+		
+		return books;
 	}
 }

@@ -1,6 +1,5 @@
 package br.com.tosin.serverrmi.ui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -8,19 +7,23 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import br.com.tosin.models.ManagementBook;
 import br.com.tosin.serverrmi.controller.Controller;
-import br.com.tosin.serverrmi.models.Book;
 import br.com.tosin.serverrmi.utils.Util;
 
 import javax.swing.JLabel;
-import javax.swing.JList;
-import java.awt.List;
-import java.util.Iterator;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainFrame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
 	DefaultTableModel model;
@@ -53,7 +56,7 @@ public class MainFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblListaDeLivros = new JLabel("Lista de livros");
-		lblListaDeLivros.setBounds(12, 37, 115, 15);
+		lblListaDeLivros.setBounds(12, 32, 115, 15);
 		contentPane.add(lblListaDeLivros);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -70,6 +73,18 @@ public class MainFrame extends JFrame {
 		
 		scrollPane.setViewportView(table);
 		
+		JButton btnNewButton = new JButton("Refresh");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				java.util.List<ManagementBook> books = Controller.getBooksManagement();
+				populateBooks(books);
+			}
+		});
+		
+		
+		btnNewButton.setBounds(321, 32, 117, 25);
+		contentPane.add(btnNewButton);
+		
 		new Controller(this).execute();
 		
 	}
@@ -78,9 +93,9 @@ public class MainFrame extends JFrame {
 	 * Recebe uma lista de livro e mostra na tela
 	 * @param books
 	 */
-	public void populateBooks(java.util.List<Book> books) {
-		
-		for (Book book : books) {
+	public void populateBooks(java.util.List<ManagementBook> books) {
+		model.setNumRows(1);
+		for (ManagementBook book : books) {
 			String[] item = new String[4];
 			item[0] = book.getAuthor();
 			item[1] = book.getTitle();
