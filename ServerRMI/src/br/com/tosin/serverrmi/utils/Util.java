@@ -11,7 +11,7 @@ import br.com.tosin.models.ManagementBook;
 
 public class Util {
 
-//	private static final long LOAN_TIME = 300000;
+	private static final long LOAN_TIME = 300000;
 	
 	/**
 	 * Retorna o timestamp do emprestimo
@@ -33,9 +33,12 @@ public class Util {
 	 * @return
 	 */
 	public static String parseDate(Calendar calendar) {
-//		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
+		long dev = calendar.getTimeInMillis();
+		dev += LOAN_TIME;
+		calendar.setTimeInMillis(dev);
 		String date = dateFormat.format(calendar.getTime());
 		return date;
 	}

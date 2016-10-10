@@ -14,18 +14,42 @@ import br.com.tosin.clientrmi.controllers.Controller;
 import br.com.tosin.models.Book;
 
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
-import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import javax.swing.SwingConstants;
 
 public class MainCliente {
 
 	private JFrame frame;
-//	private JTable table;
 	private DefaultTableModel model;
+	private DefaultTableModel modelMyBook;
 	private Controller controller;
-	private JTable table;
+	private JTable tableAllBooks;
 	private JLabel lblNewLabel;
+	private JPanel panelWest;
+	private JButton btnEmprestar;
+	private JButton btnReservar;
+	private JLabel lblNewLabel_1;
+	private JPanel panel_1;
+	private JLabel notificacao;
+	private JPanel panel_2;
+	
+	java.util.List<Book> books;
+	java.util.List<Book> myBooks;
+	private JButton btnDevolver;
+	private JPanel panel_3;
+	private JScrollPane scrollPane_allBooks;
+	private JPanel panel_Center;
+	private JLabel lblTodosOsLivros;
+	private JLabel lblNewLabel_2;
+	private JPanel panel_4;
+	private JPanel panel_5;
+	private JScrollPane scrollPane_myBooks;
+	private JPanel panel;
+	private JPanel panel_6;
+	private JTable tableMyBooks;
 
 	/**
 	 * Launch the application.
@@ -56,32 +80,129 @@ public class MainCliente {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame = new JFrame("Client");
+		frame.setBounds(100, 100, 600, 400);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JButton btnGetBooks = new JButton("Get books");
+		panel_2 = new JPanel();
+		frame.getContentPane().add(panel_2, BorderLayout.NORTH);
+		
+		lblNewLabel = new JLabel("Gerencia cliente");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_2.add(lblNewLabel);
+		
+		panelWest = new JPanel();
+		frame.getContentPane().add(panelWest, BorderLayout.WEST);
+		
+		JButton btnGetBooks = new JButton("Busca livros");
 		btnGetBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controller.teste();
 				controller.requestListBook();
 			}
 		});
-		frame.getContentPane().add(btnGetBooks, BorderLayout.WEST);
+		panelWest.setLayout(new GridLayout(4, 1, 0, 0));
+		panelWest.add(btnGetBooks);
+		
+		btnEmprestar = new JButton("Emprestar");
+		btnEmprestar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selected = tableAllBooks.getSelectedRow();
+				if (books == null || selected < 0) {
+					showNotification("Nenhum livro selecionado");
+				}
+				else {
+					Book book = books.get(selected);
+					controller.loan(book);
+				}
+			}
+		});
+		panelWest.add(btnEmprestar);
+		
+		btnReservar = new JButton("Reservar");
+		btnReservar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		
+		btnDevolver = new JButton("Devolver");
+		btnDevolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		panelWest.add(btnDevolver);
+		panelWest.add(btnReservar);
+		
 
 		model = new DefaultTableModel();
 		
-		table = new JTable(model);
-		frame.getContentPane().add(table, BorderLayout.CENTER);
-		
-		lblNewLabel = new JLabel("New label");
-		frame.getContentPane().add(lblNewLabel, BorderLayout.NORTH);
-		
-//		table = new JTable(model);
 		model.addColumn("Autor");
 		model.addColumn("Titulo");
 		model.addColumn("Disponivel");
-		model.addColumn("Data Dev");
+		
+		panel_Center = new JPanel();
+		frame.getContentPane().add(panel_Center, BorderLayout.CENTER);
+		panel_Center.setLayout(new GridLayout(2, 1, 0, 0));
+		
+		panel = new JPanel();
+		panel_Center.add(panel);
+		panel.setLayout(null);
+		
+		lblTodosOsLivros = new JLabel("Todos os livros");
+		lblTodosOsLivros.setBounds(0, 0, 446, 21);
+		panel.add(lblTodosOsLivros);
+		lblTodosOsLivros.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		panel_4 = new JPanel();
+		panel_4.setBounds(0, 49, 482, 123);
+		panel.add(panel_4);
+		panel_4.setLayout(null);
+		tableAllBooks = new JTable(model);
+		
+		scrollPane_allBooks = new JScrollPane();
+		scrollPane_allBooks.setBounds(22, 0, 446, 103);
+		panel_4.add(scrollPane_allBooks);
+		scrollPane_allBooks.setViewportView(tableAllBooks);
+		
+		panel_6 = new JPanel();
+		panel_Center.add(panel_6);
+		
+		lblNewLabel_2 = new JLabel("Meus livros");
+		lblNewLabel_2.setBounds(0, 0, 482, 20);
+		
+		panel_5 = new JPanel();
+		panel_5.setBounds(7, 30, 465, 137);
+		panel_5.setLayout(null);
+		
+		scrollPane_myBooks = new JScrollPane();
+		scrollPane_myBooks.setBounds(4, 5, 455, 124);
+		panel_5.add(scrollPane_myBooks);
+		
+		modelMyBook = new DefaultTableModel();
+		
+		modelMyBook.addColumn("Autor");
+		modelMyBook.addColumn("Titulo");
+		modelMyBook.addColumn("Disponivel");
+		
+		tableMyBooks = new JTable(modelMyBook);
+		tableMyBooks.setBounds(0, 0, 1, 1);
+
+		scrollPane_myBooks.setViewportView(tableMyBooks);
+		
+		panel_6.setLayout(null);
+		panel_6.add(lblNewLabel_2);
+		panel_6.add(panel_5);
+		
+		panel_1 = new JPanel();
+		frame.getContentPane().add(panel_1, BorderLayout.SOUTH);
+		panel_1.setLayout(new GridLayout(2, 1, 0, 0));
+		
+		lblNewLabel_1 = new JLabel("Notificacoes: ");
+		panel_1.add(lblNewLabel_1);
+		
+		notificacao = new JLabel("Sem notificacoes");
+		panel_1.add(notificacao);
+		
 	}
 	
 	/**
@@ -89,15 +210,34 @@ public class MainCliente {
 	 * @param books
 	 */
 	public void populateBooks(java.util.List<Book> books) {
-		model.setNumRows(1);
+		this.books = books;
+		model.setNumRows(0);
 		for (Book book : books) {
 			String[] item = new String[4];
 			item[0] = book.getAuthor();
 			item[1] = book.getTitle();
+			item[2] = book.isAvailable() ? "Sim" : "Não";
 			model.addRow(item);
 		}
 		
-		
 	}
-
+	
+	public void populateMyBooks(List<Book> books) {
+		this.myBooks = books;
+		
+		modelMyBook.setNumRows(0);
+		if (this.myBooks != null) {
+			for (Book book : books) {
+				String[] item = new String[4];
+				item[0] = book.getAuthor();
+				item[1] = book.getTitle();
+				item[2] = book.isAvailable() ? "Sim" : "Não";
+				modelMyBook.addRow(item);
+			}
+		}
+	}
+	
+	public void showNotification(String msg) {
+		notificacao.setText(msg);
+	}
 }

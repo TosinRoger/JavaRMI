@@ -3,18 +3,21 @@ package br.com.tosin.clientrmi.controllers;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Random;
 
 import br.com.tosin.javarmi.interfaces.ClientInterface;
 import br.com.tosin.models.Book;
 
 public class Provider extends UnicastRemoteObject implements ClientInterface{
 
-	private Controller controller;
 	/**
 	 * 
 	 */
 	public static final long serialVersionUID = 1L;
 
+	private Controller controller;
+	public long id = new Random().nextLong();
+	
 	public Provider(Controller controller) throws RemoteException {
 		super();
 		// TODO Auto-generated constructor stub
@@ -34,18 +37,20 @@ public class Provider extends UnicastRemoteObject implements ClientInterface{
 	}
 
 	@Override
-	public void listBooks(List<Book> books) throws RemoteException {
+	public void message(String msg) throws RemoteException {
+		// TODO Auto-generated method stub
+		System.out.println("Servidor: " + msg);
+		controller.showMessage(msg);
+	}
+
+	@Override
+	public void listBooks(List<Book> books, List<Book> myBooks) throws RemoteException {
 		// TODO Auto-generated method stub
 		System.out.println("Client: get books is request");
 		System.out.println("Size books: " + (books == null ? "nulo" : books.size()));
 		controller.getBooks(books);
-//		Controller.loan(books.get(1));
-	}
-
-	@Override
-	public void message(String msg) throws RemoteException {
-		// TODO Auto-generated method stub
-		System.out.println("Servidor: " + msg);
+		
+		controller.myBooks(myBooks);
 	}
 
 }

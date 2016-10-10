@@ -19,9 +19,9 @@ public class Controller {
 	private static List<ManagementBook> booksManagement = new ArrayList<ManagementBook>();
 	private static List<ClientInterface> listLoan;
 	private static List<ClientInterface> listOverdue;
-	private static Provider providerServer;
+	private static ProviderService providerServer;
 
-	private MainFrame mainFrame;
+	private static MainFrame mainFrame;
 
 	public Controller(MainFrame mainFrame) {
 		super();
@@ -39,7 +39,7 @@ public class Controller {
 	private void registerConnection() {
 		try {
 			Registry referenciaServicoNomes = LocateRegistry.createRegistry(PORT);
-			providerServer = new Provider();
+			providerServer = new ProviderService();
 			referenciaServicoNomes.rebind("NomeAleatorio", providerServer);
 
 		} catch (RemoteException e) {
@@ -58,6 +58,8 @@ public class Controller {
 	 * @return
 	 */
 	public static boolean idOverdeu(ClientInterface client) {
+		if (getListOverdue() == null)
+			return false;
 		 for(ClientInterface item : getListOverdue())
 			 if (item == client)
 				 return true;
@@ -72,7 +74,7 @@ public class Controller {
 	public static boolean bookIsAvailable(Book book) {
 		for (ManagementBook item : getBooksManagement()) 
 			if(book.getId() == item.getId()) 
-				return false;
+				return item.isAvailable();
 		return true;
 	}
 	
@@ -108,10 +110,12 @@ public class Controller {
 	 * @return
 	 */
 	public static List<ManagementBook> getBooksManagement() {
+		if (booksManagement == null) 
+			booksManagement = new ArrayList<>();
 		return booksManagement;
 	}
 
-	public static Provider getProviderServer() {
+	public static ProviderService getProviderServer() {
 		return providerServer;
 	}
 
@@ -120,7 +124,9 @@ public class Controller {
 	 * 
 	 * @return
 	 */
-	public static List<ClientInterface> getListLoan() {
+	private static List<ClientInterface> getListLoan() {
+		if (listLoan == null)
+			listLoan = new ArrayList<>();
 		return listLoan;
 	}
 
@@ -130,7 +136,21 @@ public class Controller {
 	 * @return
 	 */
 	public static List<ClientInterface> getListOverdue() {
+		if (listOverdue == null)
+			listOverdue = new ArrayList<>();
 		return listOverdue;
+	}
+	
+	public static void loanBook (ClientInterface client, Book book) {
+		getListLoan().add(client);
+		
+		for (ManagementBook managementBook : getBooksManagement()) {
+			if(managementBook.getId() == book.getId()) {
+				managementBook.setLoan();
+				managementBook.setClient(client);
+				mainFrame.populateBooks(getBooksManagement());
+			}
+		}
 	}
 
 }

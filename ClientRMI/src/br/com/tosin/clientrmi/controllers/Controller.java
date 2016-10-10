@@ -90,4 +90,12 @@ public class Controller {
 			e.printStackTrace();
 		}
 	}
+	
+	public void showMessage(String msg) {
+		mainClient.showNotification(msg);
+	}
+	
+	public void myBooks(List<Book> books) {
+		mainClient.populateMyBooks(books);
+	}
 }

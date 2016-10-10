@@ -2,20 +2,22 @@ package br.com.tosin.serverrmi.controller;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.tosin.javarmi.interfaces.ClientInterface;
 import br.com.tosin.javarmi.interfaces.ServerInterface;
 import br.com.tosin.models.Book;
+import br.com.tosin.models.ManagementBook;
 
-public class Provider extends UnicastRemoteObject implements ServerInterface {
+public class ProviderService extends UnicastRemoteObject implements ServerInterface {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public Provider() throws RemoteException {
+	public ProviderService() throws RemoteException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -32,21 +34,32 @@ public class Provider extends UnicastRemoteObject implements ServerInterface {
 		// TODO Auto-generated method stub
 		System.out.println("Server: getBook is request");
 		List<Book> books = Controller.getBooks();
-		clientInterface.listBooks(books);
+		
+		List<Book> myBook = new ArrayList<>();
+		
+		for(ManagementBook item : Controller.getBooksManagement())
+			if (item.getClient() == clientInterface)
+				myBook.add(item.getBook());
+		
+		clientInterface.listBooks(books, myBook);
 	}
 
 	@Override
 	public void loan(ClientInterface clientInterface, Book book) throws RemoteException {
 		// TODO Auto-generated method stub
 		System.out.println("Server: loan is request");
-		if(Controller.idOverdeu(clientInterface)) {
+		if (book == null ) {
+			clientInterface.message("O livro nao existe");
+		}
+		else if(Controller.idOverdeu(clientInterface)) {
 			clientInterface.message("Voce nao pode empressatar livros");
 		}
-		else if(Controller.bookIsAvailable(book)) {
+		else if(!Controller.bookIsAvailable(book)) {
 			clientInterface.message("Livro esta emprestado, voce podera entrar a lista de espera"); 
 		}
 		else {
-			
+			Controller.loanBook(clientInterface, book);
+			clientInterface.message("Livro emprestado");
 		}
 	}
 

@@ -12,6 +12,7 @@ public class Book implements Serializable {
 	private String title;
 	private String author;
 	private String about;
+	private boolean available;
 
 	public Book(long id, String title, String author, String about) {
 		super();
@@ -32,9 +33,13 @@ public class Book implements Serializable {
 	public String getAuthor() {
 		return author;
 	}
-	
+
 	public String getAbout() {
 		return about;
+	}
+
+	public boolean isAvailable() {
+		return available;
 	}
 
 }

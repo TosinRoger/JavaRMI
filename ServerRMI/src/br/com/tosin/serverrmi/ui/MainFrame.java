@@ -49,7 +49,8 @@ public class MainFrame extends JFrame {
 	 */
 	public MainFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setTitle("Servidor");
+		setBounds(100, 100, 600, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -60,7 +61,7 @@ public class MainFrame extends JFrame {
 		contentPane.add(lblListaDeLivros);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 91, 428, 164);
+		scrollPane.setBounds(12, 91, 576, 297);
 		contentPane.add(scrollPane);
 		
 
@@ -82,7 +83,7 @@ public class MainFrame extends JFrame {
 		});
 		
 		
-		btnNewButton.setBounds(321, 32, 117, 25);
+		btnNewButton.setBounds(471, 32, 117, 25);
 		contentPane.add(btnNewButton);
 		
 		new Controller(this).execute();
@@ -94,7 +95,7 @@ public class MainFrame extends JFrame {
 	 * @param books
 	 */
 	public void populateBooks(java.util.List<ManagementBook> books) {
-		model.setNumRows(1);
+		model.setNumRows(0);
 		for (ManagementBook book : books) {
 			String[] item = new String[4];
 			item[0] = book.getAuthor();
