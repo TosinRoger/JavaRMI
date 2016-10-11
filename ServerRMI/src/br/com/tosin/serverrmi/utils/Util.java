@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.tosin.models.Book;
 import br.com.tosin.models.ManagementBook;
 
 public class Util {
@@ -110,5 +111,10 @@ public class Util {
 		books.add(new ManagementBook(5, "titulo 5", "autor 5", "Historinha 5", true));
 		
 		return books;
+	}
+	
+	public static ManagementBook createNewBook(int id){
+		ManagementBook book = new ManagementBook(id, "titulo " + id, "autor " + id, "Historinha " + id, true);
+		return book;
 	}
 }

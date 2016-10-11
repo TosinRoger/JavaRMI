@@ -86,6 +86,17 @@ public class MainFrame extends JFrame {
 		btnNewButton.setBounds(471, 32, 117, 25);
 		contentPane.add(btnNewButton);
 		
+		JButton btnAddBook = new JButton("Add Book");
+		btnAddBook.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controller.addBook();
+				java.util.List<ManagementBook> books = Controller.getBooksManagement();
+				populateBooks(books);
+			}
+		});
+		btnAddBook.setBounds(342, 32, 117, 25);
+		contentPane.add(btnAddBook);
+		
 		new Controller(this).execute();
 		
 	}

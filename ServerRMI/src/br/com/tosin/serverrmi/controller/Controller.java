@@ -113,6 +113,11 @@ public class Controller {
 		}
 		return false;
 	}
+	
+	public static void addBook() {
+		int id = getBooksManagement().size();
+		getBooksManagement().add(Util.createNewBook(++id));
+	}
 
 	// ===============================================================================
 	// GETTERS
