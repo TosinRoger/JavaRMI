@@ -11,7 +11,6 @@ import java.util.List;
 import br.com.tosin.javarmi.interfaces.ClientInterface;
 import br.com.tosin.models.Book;
 import br.com.tosin.models.ManagementBook;
-import br.com.tosin.models.Overdue;
 import br.com.tosin.models.Reservation;
 import br.com.tosin.serverrmi.ui.MainFrame;
 import br.com.tosin.serverrmi.utils.Util;
@@ -197,10 +196,17 @@ public class Controller {
 		}
 		
 		for (ManagementBook item : getBooksManagement()) {
-			if (item.getBook().getId() == book.getId() && item.getClient() != null) 
-				item.setReserve();
-				reservations.add(new Reservation(client, book));
-				return "Voce esta na lista de espera. Você será avisado quando o livro estiver diponível";
+			if (item.getBook().getId() == book.getId()) {
+				if (item.getClient() == null) {
+					return "O livro esta disponivel para ser empresatado";
+				}
+				else {
+					item.setReserve();
+					reservations.add(new Reservation(client, book));
+					return "Voce esta na lista de espera. Você será avisado quando o livro estiver diponível";
+				}
+			}
+			
 		}
 		
 		

@@ -7,22 +7,21 @@ import br.com.tosin.serverrmi.utils.Constants;
 
 public class ManagementBook extends Book {
 
-	public ManagementBook(long id, String title, String author, String abount, boolean available, long timeDevolution) {
-		super(id, title, author, abount, available, timeDevolution);
-		// TODO Auto-generated constructor stub
-		available = true;
-		loan = 0;
-		if(id == 5) {
-			available = false;
-			loan = Calendar.getInstance().getTimeInMillis();
-		}
-	}
-	
+
 	private static final long serialVersionUID = 1L;
 	
 	private long loan;
 	private boolean reserved;
 	private ClientInterface client;
+	
+	public ManagementBook(long id, String title, String author, String abount, boolean available, long timeDevolution) {
+		super(id, title, author, abount, available, timeDevolution);
+		// TODO Auto-generated constructor stub
+		this.available = true;
+		this.loan = 0;
+		this.client = null;
+	}
+	
 
 	public Calendar getLoan() {
 		Calendar calendar = Calendar.getInstance();
@@ -37,7 +36,7 @@ public class ManagementBook extends Book {
 	}
 	
 	/**
-	 * Ajuste as configuracoes para emprestado
+	 * Ajuste as configuracoes para emprestado 
 	 */
 	public void setLoan() {
 		this.available = false;
