@@ -58,8 +58,13 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 			clientInterface.message("Livro esta emprestado, voce podera entrar a lista de espera"); 
 		}
 		else {
-			Controller.loanBook(clientInterface, book);
-			clientInterface.message("Livro emprestado");
+			String done = Controller.loanBook(clientInterface, book);
+			if(done.contains("Emprestado"))
+				clientInterface.message("Livro emprestado");
+			else if(done.equals("atingiu o limite"))
+				clientInterface.message("Voce ja atingui o limite de emprestimo");
+			else 
+				clientInterface.message(done);
 		}
 	}
 

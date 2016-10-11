@@ -114,10 +114,44 @@ public class Controller {
 		return false;
 	}
 	
+	/**
+	 * Adiciona livro na lista do servidor
+	 */
 	public static void addBook() {
 		int id = getBooksManagement().size();
 		getBooksManagement().add(Util.createNewBook(++id));
 	}
+	
+
+	/**
+	 * usuario empresta livro
+	 * @param client
+	 * @param book
+	 */
+	public static String loanBook(ClientInterface client, Book book) {
+		getListLoan().add(client);
+		//TODO por tosin [11 de out de 2016] verificar se usuario pode emrpesar livro
+
+		int countBookClient = 0;
+		for (ManagementBook item : getBooksManagement()) {
+			if (item.getClient() != null && item.getClient().equals(client))
+				countBookClient++;
+		}
+		
+		if (countBookClient >= 3)
+			return "Voce ja atingiu o limite";
+		
+		for (ManagementBook managementBook : getBooksManagement()) {
+			if (managementBook.getId() == book.getId()) {
+				managementBook.setLoan();
+				managementBook.setClient(client);
+				mainFrame.populateBooks(getBooksManagement());
+				return "Emprestado";
+			}
+		}
+		return "Nao foi possivel emprestar o livro";
+	}
+
 
 	// ===============================================================================
 	// GETTERS
@@ -182,24 +216,6 @@ public class Controller {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * usuario empresta livro
-	 * @param client
-	 * @param book
-	 */
-	public static void loanBook(ClientInterface client, Book book) {
-		getListLoan().add(client);
-		//TODO por tosin [11 de out de 2016] verificar se usuario pode emrpesar livro
-
-		for (ManagementBook managementBook : getBooksManagement()) {
-			if (managementBook.getId() == book.getId()) {
-				managementBook.setLoan();
-				managementBook.setClient(client);
-				mainFrame.populateBooks(getBooksManagement());
-			}
-		}
 	}
 
 }
