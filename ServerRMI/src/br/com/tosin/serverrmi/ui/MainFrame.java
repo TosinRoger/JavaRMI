@@ -71,6 +71,7 @@ public class MainFrame extends JFrame {
 		model.addColumn("Titulo");
 		model.addColumn("Disponivel");
 		model.addColumn("Data Dev");
+		model.addColumn("Tem Reser");
 		
 		scrollPane.setViewportView(table);
 		
@@ -109,7 +110,7 @@ public class MainFrame extends JFrame {
 		
 		model.setNumRows(0);
 		for (ManagementBook book : books) {
-			String[] item = new String[4];
+			String[] item = new String[5];
 			item[0] = book.getAuthor();
 			item[1] = book.getTitle();
 			item[2] = book.isAvailable() ? "Sim" : "Não";
@@ -119,6 +120,7 @@ public class MainFrame extends JFrame {
 			else {
 				item[3] = Util.parseDate(book.getLoan());
 			}
+			item[4] = book.isReserved() ? "Sim" : "Não";
 			model.addRow(item);
 		}
 		

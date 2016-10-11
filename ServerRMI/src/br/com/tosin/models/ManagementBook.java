@@ -21,6 +21,7 @@ public class ManagementBook extends Book {
 	private static final long serialVersionUID = 1L;
 	
 	private long loan;
+	private boolean reserved;
 	private ClientInterface client;
 
 	public Calendar getLoan() {
@@ -36,12 +37,13 @@ public class ManagementBook extends Book {
 	}
 	
 	/**
-	 * Ajuste as configuracoes como emprestado
+	 * Ajuste as configuracoes para emprestado
 	 */
 	public void setLoan() {
 		this.available = false;
 		this.loan = Calendar.getInstance().getTimeInMillis();
 		this.timeDevolution = this.loan + Constants.TIME_LOAN;
+		this.reserved = false;
 	}
 	
 	/**
@@ -52,6 +54,18 @@ public class ManagementBook extends Book {
 		this.loan = 0;
 		this.timeDevolution = 0;
 		this.client = null;
+	}
+	
+	public void setReserve() {
+		this.reserved = true;
+	}
+	
+	public void removeReserve() {
+		this.reserved = false;
+	}
+	
+	public boolean isReserved() {
+		return this.reserved;
 	}
 
 	public ClientInterface getClient() {

@@ -135,7 +135,7 @@ public class MainCliente {
 				}
 				else {
 					Book book = books.get(selected);
-					controller.loan(book);
+					controller.reservation(book);
 				}
 			}
 		});

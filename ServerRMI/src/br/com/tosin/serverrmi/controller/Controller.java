@@ -10,6 +10,7 @@ import java.util.List;
 import br.com.tosin.javarmi.interfaces.ClientInterface;
 import br.com.tosin.models.Book;
 import br.com.tosin.models.ManagementBook;
+import br.com.tosin.models.Reservation;
 import br.com.tosin.serverrmi.ui.MainFrame;
 import br.com.tosin.serverrmi.utils.Util;
 
@@ -17,7 +18,8 @@ public class Controller {
 
 	private static int PORT = 5555;
 
-	private static List<ManagementBook> booksManagement = new ArrayList<ManagementBook>();
+	private static List<ManagementBook> booksManagement = new ArrayList<>();
+	private static List<Reservation> reservations = new ArrayList<>();
 	private static ProviderService providerServer;
 	private static OverdueList overdueList;
 
@@ -162,6 +164,27 @@ public class Controller {
 		return false;
 	}
 	
+
+	public static String reservation(ClientInterface client, Book book) {
+		
+		for(Reservation item : reservations) {
+			// livro ja esta reservado
+			if (item.getBook().getId() == book.getId())
+				return "Livro já esta reservado";
+		}
+		
+		for (ManagementBook item : getBooksManagement()) {
+			if (item.getBook().getId() == book.getId() && item.getClient() != null) 
+				item.setReserve();
+				reservations.add(new Reservation(client, book));
+				return "Voce esta na lista de espera. Você será avisado quando o livro estiver diponível";
+		}
+		
+		
+		
+		return "Não foi possível reservar o livro";
+	}
+	
 	public static String buildTextOverdue(ClientInterface client) {
 		long time = overdueList.timeOverdue(client);
 		Calendar calendar = Calendar.getInstance();
@@ -170,6 +193,7 @@ public class Controller {
 		
 		return Util.parseDate(calendar);
 	}
+	
 
 
 	// ===============================================================================

@@ -98,6 +98,8 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 	public void reservation(ClientInterface clientInterface, Book book) throws RemoteException {
 		// TODO Auto-generated method stub
 		System.out.println("Server: reservation is request");
+		String msg = Controller.reservation(clientInterface, book);
+		clientInterface.message(msg);
 		
 	}
 
