@@ -6,8 +6,8 @@ import br.com.tosin.javarmi.interfaces.ClientInterface;
 
 public class ManagementBook extends Book {
 
-	public ManagementBook(long id, String title, String author, String abount) {
-		super(id, title, author, abount);
+	public ManagementBook(long id, String title, String author, String abount, boolean available) {
+		super(id, title, author, abount, available);
 		// TODO Auto-generated constructor stub
 		available = true;
 		loan = 0;
@@ -30,13 +30,25 @@ public class ManagementBook extends Book {
 	
 	
 	public Book getBook() {
-		Book b = new Book(getId(), getTitle(), getAuthor(), getAbout());
+		Book b = new Book(getId(), getTitle(), getAuthor(), getAbout(), isAvailable());
 		return b;
 	}
 	
+	/**
+	 * Ajuste as configuracoes como emprestado
+	 */
 	public void setLoan() {
 		this.available = false;
 		this.loan = Calendar.getInstance().getTimeInMillis();
+	}
+	
+	/**
+	 * Ajusta as configuracoes como disponivel
+	 */
+	public void resetLoan() {
+		this.available = true;
+		this.loan = 0;
+		this.client = null;
 	}
 
 	public ClientInterface getClient() {

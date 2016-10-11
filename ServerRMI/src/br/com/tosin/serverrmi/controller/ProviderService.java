@@ -38,7 +38,7 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 		List<Book> myBook = new ArrayList<>();
 		
 		for(ManagementBook item : Controller.getBooksManagement())
-			if (item.getClient() == clientInterface)
+			if (item.getClient() != null && item.getClient().equals(clientInterface))
 				myBook.add(item.getBook());
 		
 		clientInterface.listBooks(books, myBook);
@@ -64,23 +64,33 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 	}
 
 	@Override
-	public void renovation(ClientInterface clientInterface) throws RemoteException {
+	public void renovation(ClientInterface clientInterface, Book book) throws RemoteException {
 		// TODO Auto-generated method stub
 		System.out.println("Server: renovation is request");
-		
+		if(Controller.renovation(clientInterface, book)) {
+			clientInterface.message("Livro renovado");
+		}
+		else {
+			clientInterface.message("Voce nao pode renovar o livro");
+		}
 	}
 
 	@Override
 	public void devolution(ClientInterface clientInterface, Book book) throws RemoteException {
 		// TODO Auto-generated method stub
-		System.out.println("Server: renovation is request");
-		
+		System.out.println("Server: devolution is request");
+		if(Controller.devolution(book)) {
+			clientInterface.message("Livro devolvido");
+		}
+		else {
+			clientInterface.message("Não foi possivel devolver o livro");
+		}
 	}
 
 	@Override
 	public void reservation(ClientInterface clientInterface, Book book) throws RemoteException {
 		// TODO Auto-generated method stub
-		System.out.println("Server: renovation is request");
+		System.out.println("Server: reservation is request");
 		
 	}
 

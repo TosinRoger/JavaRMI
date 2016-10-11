@@ -91,6 +91,33 @@ public class Controller {
 		}
 	}
 	
+	public void devolution(Book book ) {
+		try {
+			servidor.devolution(user, book);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void reservation(Book book) {
+		try {
+			servidor.reservation(user, book);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void renovation(Book book) {
+		try {
+			servidor.renovation(user, book);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void showMessage(String msg) {
 		mainClient.showNotification(msg);
 	}

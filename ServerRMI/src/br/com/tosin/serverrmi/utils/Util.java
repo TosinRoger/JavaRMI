@@ -42,6 +42,13 @@ public class Util {
 		String date = dateFormat.format(calendar.getTime());
 		return date;
 	}
+	
+	public static boolean canRenovation(ManagementBook book) {
+		if (book.getLoan().getTimeInMillis() + LOAN_TIME <= Calendar.getInstance().getTimeInMillis()) 
+			return true;
+		else
+			return false;
+	}
 
 	/**
 	 * Carrega os dados de uma base local
@@ -96,11 +103,11 @@ public class Util {
 
 	private static List<ManagementBook> staticBook() {
 		List<ManagementBook> books = new ArrayList<>();
-		books.add(new ManagementBook(1, "titulo 1", "autor 1", "Historinha 1"));
-		books.add(new ManagementBook(2, "titulo 2", "autor 2", "Historinha 2"));
-		books.add(new ManagementBook(3, "titulo 3", "autor 3", "Historinha 3"));
-		books.add(new ManagementBook(4, "titulo 4", "autor 4", "Historinha 4"));
-		books.add(new ManagementBook(5, "titulo 5", "autor 5", "Historinha 5"));
+		books.add(new ManagementBook(1, "titulo 1", "autor 1", "Historinha 1", true));
+		books.add(new ManagementBook(2, "titulo 2", "autor 2", "Historinha 2", true));
+		books.add(new ManagementBook(3, "titulo 3", "autor 3", "Historinha 3", true));
+		books.add(new ManagementBook(4, "titulo 4", "autor 4", "Historinha 4", true));
+		books.add(new ManagementBook(5, "titulo 5", "autor 5", "Historinha 5", true));
 		
 		return books;
 	}

@@ -14,12 +14,13 @@ public class Book implements Serializable {
 	private String about;
 	private boolean available;
 
-	public Book(long id, String title, String author, String about) {
+	public Book(long id, String title, String author, String about, boolean available) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.author = author;
 		this.about = about;
+		this.available = available;
 	}
 
 	public long getId() {

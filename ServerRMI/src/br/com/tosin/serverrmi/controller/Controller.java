@@ -54,39 +54,66 @@ public class Controller {
 
 	/**
 	 * Verifica se o cliente esta da lista de inadimplentes
+	 * 
 	 * @param client
 	 * @return
 	 */
 	public static boolean idOverdeu(ClientInterface client) {
 		if (getListOverdue() == null)
 			return false;
-		 for(ClientInterface item : getListOverdue())
-			 if (item == client)
-				 return true;
-		 return false;
+		for (ClientInterface item : getListOverdue())
+			if (item == client)
+				return true;
+		return false;
 	}
-	
+
 	/**
 	 * Verifica se o livro esta disponivel
+	 * 
 	 * @param book
 	 * @return
 	 */
 	public static boolean bookIsAvailable(Book book) {
-		for (ManagementBook item : getBooksManagement()) 
-			if(book.getId() == item.getId()) 
+		for (ManagementBook item : getBooksManagement())
+			if (book.getId() == item.getId())
 				return item.isAvailable();
 		return true;
 	}
-	
+
+	/**
+	 * Empresta livro
+	 * 
+	 * @param book
+	 * @return
+	 */
 	public static boolean loanBook(Book book) {
-		for (ManagementBook item : getBooksManagement()) 
-			if(book.getId() == item.getId()) {
+		for (ManagementBook item : getBooksManagement())
+			if (book.getId() == item.getId()) {
 				item.setLoan();
 				return true;
 			}
 		return false;
 	}
-	
+
+	public static boolean renovation(ClientInterface client, Book book) {
+
+		for (ManagementBook item : getBooksManagement()) {
+			if (book.getId() == item.getId() && item.getClient() != null && item.getClient().equals(client)) {
+				if (Util.canRenovation(item)) {
+					item.setLoan();
+					System.out.println("livro renovado");
+				return true;
+				}
+				else {
+					//TODO por tosin [11 de out de 2016] tirar o livro da lista de emprestado e colocar o cliente como inadimplente
+					item.resetLoan();
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
 	// ===============================================================================
 	// GETTERS
 	// ===============================================================================
@@ -110,7 +137,7 @@ public class Controller {
 	 * @return
 	 */
 	public static List<ManagementBook> getBooksManagement() {
-		if (booksManagement == null) 
+		if (booksManagement == null)
 			booksManagement = new ArrayList<>();
 		return booksManagement;
 	}
@@ -141,11 +168,28 @@ public class Controller {
 		return listOverdue;
 	}
 	
-	public static void loanBook (ClientInterface client, Book book) {
-		getListLoan().add(client);
-		
+	public static boolean devolution (Book book) {
 		for (ManagementBook managementBook : getBooksManagement()) {
-			if(managementBook.getId() == book.getId()) {
+			if (managementBook.getId() == book.getId()) {
+				managementBook.resetLoan();
+				mainFrame.populateBooks(getBooksManagement());
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * usuario empresta livro
+	 * @param client
+	 * @param book
+	 */
+	public static void loanBook(ClientInterface client, Book book) {
+		getListLoan().add(client);
+		//TODO por tosin [11 de out de 2016] verificar se usuario pode emrpesar livro
+
+		for (ManagementBook managementBook : getBooksManagement()) {
+			if (managementBook.getId() == book.getId()) {
 				managementBook.setLoan();
 				managementBook.setClient(client);
 				mainFrame.populateBooks(getBooksManagement());

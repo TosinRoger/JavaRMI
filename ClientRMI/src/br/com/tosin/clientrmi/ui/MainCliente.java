@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import br.com.tosin.clientrmi.controllers.Controller;
 import br.com.tosin.models.Book;
@@ -50,6 +51,7 @@ public class MainCliente {
 	private JPanel panel;
 	private JPanel panel_6;
 	private JTable tableMyBooks;
+	private JButton btnRenovar;
 
 	/**
 	 * Launch the application.
@@ -101,7 +103,7 @@ public class MainCliente {
 				controller.requestListBook();
 			}
 		});
-		panelWest.setLayout(new GridLayout(4, 1, 0, 0));
+		panelWest.setLayout(new GridLayout(5, 1, 0, 0));
 		panelWest.add(btnGetBooks);
 		
 		btnEmprestar = new JButton("Emprestar");
@@ -122,15 +124,46 @@ public class MainCliente {
 		btnReservar = new JButton("Reservar");
 		btnReservar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				int selected = tableAllBooks.getSelectedRow();
+				if (books == null || selected < 0) {
+					showNotification("Nenhum livro selecionado");
+				}
+				else {
+					Book book = books.get(selected);
+					controller.loan(book);
+				}
 			}
 		});
 		
 		btnDevolver = new JButton("Devolver");
 		btnDevolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int selected = tableMyBooks.getSelectedRow();
+				if (books == null || selected < 0) {
+					showNotification("Nenhum livro selecionado");
+				}
+				else {
+					Book book = books.get(selected);
+					controller.devolution(book);
+				}
 			}
 		});
 		panelWest.add(btnDevolver);
+		
+		btnRenovar = new JButton("Renovar");
+		btnRenovar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selected = tableMyBooks.getSelectedRow();
+				if (books == null || selected < 0) {
+					showNotification("Nenhum livro selecionado");
+				}
+				else {
+					Book book = books.get(selected);
+					controller.renovation(book);
+				}
+			}
+		});
+		panelWest.add(btnRenovar);
 		panelWest.add(btnReservar);
 		
 
@@ -184,7 +217,8 @@ public class MainCliente {
 		modelMyBook.addColumn("Titulo");
 		modelMyBook.addColumn("Disponivel");
 		
-		tableMyBooks = new JTable(modelMyBook);
+		tableMyBooks = new JTable();
+		tableMyBooks.setModel(modelMyBook);
 		tableMyBooks.setBounds(0, 0, 1, 1);
 
 		scrollPane_myBooks.setViewportView(tableMyBooks);
@@ -212,6 +246,7 @@ public class MainCliente {
 	public void populateBooks(java.util.List<Book> books) {
 		this.books = books;
 		model.setNumRows(0);
+		model.setRowCount(0);
 		for (Book book : books) {
 			String[] item = new String[4];
 			item[0] = book.getAuthor();
@@ -225,7 +260,8 @@ public class MainCliente {
 	public void populateMyBooks(List<Book> books) {
 		this.myBooks = books;
 		
-		modelMyBook.setNumRows(0);
+		modelMyBook.setRowCount(0);
+		
 		if (this.myBooks != null) {
 			for (Book book : books) {
 				String[] item = new String[4];
@@ -239,5 +275,6 @@ public class MainCliente {
 	
 	public void showNotification(String msg) {
 		notificacao.setText(msg);
+		controller.requestListBook();
 	}
 }
