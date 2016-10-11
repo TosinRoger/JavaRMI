@@ -18,7 +18,6 @@ public class Controller {
 	private static int PORT = 5555;
 
 	private static List<ManagementBook> booksManagement = new ArrayList<ManagementBook>();
-	private static List<ClientInterface> listLoan;
 	private static ProviderService providerServer;
 	private static OverdueList overdueList;
 
@@ -120,9 +119,6 @@ public class Controller {
 	 * @param book
 	 */
 	public static String loanBook(ClientInterface client, Book book) {
-		getListLoan().add(client);
-		//TODO por tosin [11 de out de 2016] verificar se usuario pode emrpesar livro
-
 		int countBookClient = 0;
 		for (ManagementBook item : getBooksManagement()) {
 			if (item.getClient() != null && item.getClient().equals(client)) {
@@ -152,6 +148,18 @@ public class Controller {
 			}
 		}
 		return "Nao foi possivel emprestar o livro";
+	}
+	
+
+	public static boolean devolution (Book book) {
+		for (ManagementBook managementBook : getBooksManagement()) {
+			if (managementBook.getId() == book.getId()) {
+				managementBook.resetLoan();
+				mainFrame.populateBooks(getBooksManagement());
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static String buildTextOverdue(ClientInterface client) {
@@ -192,30 +200,6 @@ public class Controller {
 		return booksManagement;
 	}
 
-	public static ProviderService getProviderServer() {
-		return providerServer;
-	}
-
-	/**
-	 * Lista de usuarios que emprestaram livros
-	 * 
-	 * @return
-	 */
-	private static List<ClientInterface> getListLoan() {
-		if (listLoan == null)
-			listLoan = new ArrayList<>();
-		return listLoan;
-	}
 	
-	public static boolean devolution (Book book) {
-		for (ManagementBook managementBook : getBooksManagement()) {
-			if (managementBook.getId() == book.getId()) {
-				managementBook.resetLoan();
-				mainFrame.populateBooks(getBooksManagement());
-				return true;
-			}
-		}
-		return false;
-	}
 
 }
