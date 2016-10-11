@@ -121,7 +121,7 @@ public class Controller {
 	 * @param client
 	 * @param book
 	 */
-	public static String loanBook(ClientInterface client, Book book) {
+	public synchronized static String loanBook(ClientInterface client, Book book) {
 		int countBookClient = 0;
 		for (ManagementBook item : getBooksManagement()) {
 			if (item.getClient() != null && item.getClient().equals(client)) {
