@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import br.com.tosin.models.Book;
 import br.com.tosin.models.ManagementBook;
 
 public class Util {

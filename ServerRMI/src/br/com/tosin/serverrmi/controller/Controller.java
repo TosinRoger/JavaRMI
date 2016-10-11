@@ -25,7 +25,7 @@ public class Controller {
 
 	public Controller(MainFrame mainFrame) {
 		super();
-		this.mainFrame = mainFrame;
+		Controller.mainFrame = mainFrame;
 	}
 
 	public void execute() {
