@@ -31,9 +31,9 @@ public class Provider extends UnicastRemoteObject implements ClientInterface{
 	}
 
 	@Override
-	public void notifyBookAvaliable(int bookId) throws RemoteException {
+	public void notifyBookAvaliable(Book book) throws RemoteException {
 		// TODO Auto-generated method stub
-		
+		controller.notifyBook(book);
 	}
 
 	@Override

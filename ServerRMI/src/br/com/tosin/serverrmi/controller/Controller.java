@@ -5,11 +5,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import br.com.tosin.javarmi.interfaces.ClientInterface;
 import br.com.tosin.models.Book;
 import br.com.tosin.models.ManagementBook;
+import br.com.tosin.models.Overdue;
 import br.com.tosin.models.Reservation;
 import br.com.tosin.serverrmi.ui.MainFrame;
 import br.com.tosin.serverrmi.utils.Util;
@@ -158,12 +160,33 @@ public class Controller {
 			if (managementBook.getId() == book.getId()) {
 				managementBook.resetLoan();
 				mainFrame.populateBooks(getBooksManagement());
+				notifyClient(book);
 				return true;
 			}
 		}
 		return false;
 	}
 	
+	private static void notifyClient(Book book) {
+		Iterator<Reservation> iterator = reservations.iterator();
+		
+		while(iterator.hasNext()) {
+			Reservation item = iterator.next();
+			
+			if (item.getBook().getId() == book.getId()) {
+				try {
+					item.getClient().notifyBookAvaliable(book);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				iterator.remove();
+				break;
+			}
+			
+		}
+		
+	}
 
 	public static String reservation(ClientInterface client, Book book) {
 		

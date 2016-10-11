@@ -118,6 +118,10 @@ public class Controller {
 		}
 	}
 	
+	public void notifyBook(Book book) {
+		mainClient.notifyBookAvailable(book);
+	}
+	
 	public void showMessage(String msg) {
 		mainClient.showNotification(msg);
 	}

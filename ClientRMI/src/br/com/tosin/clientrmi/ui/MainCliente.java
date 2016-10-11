@@ -21,6 +21,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridLayout;
 import javax.swing.SwingConstants;
 
@@ -282,6 +284,10 @@ public class MainCliente {
 		notificacao.setText(msg);
 		controller.requestListBook();
 	}
+	
+	public void notifyBookAvailable(Book book) {
+		final JFrame parent = new JFrame();
+		JOptionPane.showMessageDialog(parent, "O livro " + book.getTitle() + " ja esta dipoinivel!");	}
 	
 	/**
 	 * Retorna string com a data em dd/MM/yyyy
