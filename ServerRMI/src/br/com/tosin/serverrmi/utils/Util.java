@@ -10,8 +10,6 @@ import java.util.List;
 import br.com.tosin.models.ManagementBook;
 
 public class Util {
-
-	private static final long LOAN_TIME = 300000;
 	
 	/**
 	 * Retorna o timestamp do emprestimo
@@ -28,7 +26,7 @@ public class Util {
 	}
 	
 	/**
-	 * Retorna string com a data em dd/MM/yyyy
+	 * Retorna string com a data da devolucao em dd/MM/yyyy
 	 * @param calendar
 	 * @return
 	 */
@@ -37,17 +35,20 @@ public class Util {
 //		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
 		long dev = calendar.getTimeInMillis();
-		dev += LOAN_TIME;
+		dev += Constants.TIME_LOAN;
 		calendar.setTimeInMillis(dev);
 		String date = dateFormat.format(calendar.getTime());
 		return date;
 	}
 	
+	/**
+	 * Verifica se o livro esta dentro de prazo de renovacao
+	 * @param book
+	 * @return
+	 */
 	public static boolean canRenovation(ManagementBook book) {
-		if (book.getLoan().getTimeInMillis() + LOAN_TIME <= Calendar.getInstance().getTimeInMillis()) 
-			return true;
-		else
-			return false;
+		Calendar calendar = Calendar.getInstance();
+		return (calendar.getTimeInMillis() < book.getTimeDevolution()) ? true : false;
 	}
 
 	/**
@@ -103,17 +104,17 @@ public class Util {
 
 	private static List<ManagementBook> staticBook() {
 		List<ManagementBook> books = new ArrayList<>();
-		books.add(new ManagementBook(1, "titulo 1", "autor 1", "Historinha 1", true));
-		books.add(new ManagementBook(2, "titulo 2", "autor 2", "Historinha 2", true));
-		books.add(new ManagementBook(3, "titulo 3", "autor 3", "Historinha 3", true));
-		books.add(new ManagementBook(4, "titulo 4", "autor 4", "Historinha 4", true));
-		books.add(new ManagementBook(5, "titulo 5", "autor 5", "Historinha 5", true));
+		books.add(new ManagementBook(1, "titulo 1", "autor 1", "Historinha 1", true, 0));
+		books.add(new ManagementBook(2, "titulo 2", "autor 2", "Historinha 2", true, 0));
+		books.add(new ManagementBook(3, "titulo 3", "autor 3", "Historinha 3", true, 0));
+		books.add(new ManagementBook(4, "titulo 4", "autor 4", "Historinha 4", true, 0));
+		books.add(new ManagementBook(5, "titulo 5", "autor 5", "Historinha 5", true, 0));
 		
 		return books;
 	}
 	
 	public static ManagementBook createNewBook(int id){
-		ManagementBook book = new ManagementBook(id, "titulo " + id, "autor " + id, "Historinha " + id, true);
+		ManagementBook book = new ManagementBook(id, "titulo " + id, "autor " + id, "Historinha " + id, true, 0);
 		return book;
 	}
 }

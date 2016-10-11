@@ -15,6 +15,9 @@ import br.com.tosin.clientrmi.controllers.Controller;
 import br.com.tosin.models.Book;
 
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -92,6 +95,8 @@ public class MainCliente {
 		lblNewLabel = new JLabel("Gerencia cliente");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_2.add(lblNewLabel);
+		
+		
 		
 		panelWest = new JPanel();
 		frame.getContentPane().add(panelWest, BorderLayout.WEST);
@@ -215,7 +220,7 @@ public class MainCliente {
 		
 		modelMyBook.addColumn("Autor");
 		modelMyBook.addColumn("Titulo");
-		modelMyBook.addColumn("Disponivel");
+		modelMyBook.addColumn("Data Dev");
 		
 		tableMyBooks = new JTable();
 		tableMyBooks.setModel(modelMyBook);
@@ -267,7 +272,7 @@ public class MainCliente {
 				String[] item = new String[4];
 				item[0] = book.getAuthor();
 				item[1] = book.getTitle();
-				item[2] = book.isAvailable() ? "Sim" : "Não";
+				item[2] = parseDate(book.getTimeDevolution());
 				modelMyBook.addRow(item);
 			}
 		}
@@ -276,5 +281,19 @@ public class MainCliente {
 	public void showNotification(String msg) {
 		notificacao.setText(msg);
 		controller.requestListBook();
+	}
+	
+	/**
+	 * Retorna string com a data em dd/MM/yyyy
+	 * @param calendar
+	 * @return
+	 */
+	private static String parseDate(long time) {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(time);
+		String date = dateFormat.format(calendar.getTime());
+		return date;
 	}
 }

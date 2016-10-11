@@ -12,15 +12,17 @@ public class Book implements Serializable {
 	private String title;
 	private String author;
 	private String about;
-	private boolean available;
+	public boolean available;
+	public long timeDevolution;
 
-	public Book(long id, String title, String author, String about, boolean available) {
+	public Book(long id, String title, String author, String about, boolean available, long timeDevolution) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.author = author;
 		this.about = about;
 		this.available = available;
+		this.timeDevolution = timeDevolution;
 	}
 
 	public long getId() {
@@ -41,6 +43,10 @@ public class Book implements Serializable {
 
 	public boolean isAvailable() {
 		return available;
+	}
+	
+	public long getTimeDevolution() {
+		return timeDevolution;
 	}
 
 }

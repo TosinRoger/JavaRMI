@@ -3,11 +3,12 @@ package br.com.tosin.models;
 import java.util.Calendar;
 
 import br.com.tosin.javarmi.interfaces.ClientInterface;
+import br.com.tosin.serverrmi.utils.Constants;
 
 public class ManagementBook extends Book {
 
-	public ManagementBook(long id, String title, String author, String abount, boolean available) {
-		super(id, title, author, abount, available);
+	public ManagementBook(long id, String title, String author, String abount, boolean available, long timeDevolution) {
+		super(id, title, author, abount, available, timeDevolution);
 		// TODO Auto-generated constructor stub
 		available = true;
 		loan = 0;
@@ -30,7 +31,7 @@ public class ManagementBook extends Book {
 	
 	
 	public Book getBook() {
-		Book b = new Book(getId(), getTitle(), getAuthor(), getAbout(), isAvailable());
+		Book b = new Book(getId(), getTitle(), getAuthor(), getAbout(), isAvailable(), getTimeDevolution());
 		return b;
 	}
 	
@@ -40,6 +41,7 @@ public class ManagementBook extends Book {
 	public void setLoan() {
 		this.available = false;
 		this.loan = Calendar.getInstance().getTimeInMillis();
+		this.timeDevolution = this.loan + Constants.TIME_LOAN;
 	}
 	
 	/**
@@ -48,6 +50,7 @@ public class ManagementBook extends Book {
 	public void resetLoan() {
 		this.available = true;
 		this.loan = 0;
+		this.timeDevolution = 0;
 		this.client = null;
 	}
 

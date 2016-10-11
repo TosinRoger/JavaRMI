@@ -106,6 +106,7 @@ public class MainFrame extends JFrame {
 	 * @param books
 	 */
 	public void populateBooks(java.util.List<ManagementBook> books) {
+		
 		model.setNumRows(0);
 		for (ManagementBook book : books) {
 			String[] item = new String[4];

@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import br.com.tosin.javarmi.interfaces.ClientInterface;
@@ -18,14 +19,15 @@ public class Controller {
 
 	private static List<ManagementBook> booksManagement = new ArrayList<ManagementBook>();
 	private static List<ClientInterface> listLoan;
-	private static List<ClientInterface> listOverdue;
 	private static ProviderService providerServer;
+	private static OverdueList overdueList;
 
 	private static MainFrame mainFrame;
 
 	public Controller(MainFrame mainFrame) {
 		super();
 		Controller.mainFrame = mainFrame;
+		Controller.overdueList = new OverdueList();
 	}
 
 	public void execute() {
@@ -59,12 +61,7 @@ public class Controller {
 	 * @return
 	 */
 	public static boolean idOverdeu(ClientInterface client) {
-		if (getListOverdue() == null)
-			return false;
-		for (ClientInterface item : getListOverdue())
-			if (item == client)
-				return true;
-		return false;
+		return overdueList.consultClient(client);
 	}
 
 	/**
@@ -79,34 +76,28 @@ public class Controller {
 				return item.isAvailable();
 		return true;
 	}
-
+	
 	/**
-	 * Empresta livro
-	 * 
+	 * Renova o livro caso seja possivel, 
+	 * senao for adiciona o cliente na lista de usuario
+	 * @param client
 	 * @param book
 	 * @return
 	 */
-	public static boolean loanBook(Book book) {
-		for (ManagementBook item : getBooksManagement())
-			if (book.getId() == item.getId()) {
-				item.setLoan();
-				return true;
-			}
-		return false;
-	}
-
 	public static boolean renovation(ClientInterface client, Book book) {
 
 		for (ManagementBook item : getBooksManagement()) {
 			if (book.getId() == item.getId() && item.getClient() != null && item.getClient().equals(client)) {
 				if (Util.canRenovation(item)) {
 					item.setLoan();
-					System.out.println("livro renovado");
-				return true;
+					mainFrame.populateBooks(getBooksManagement());
+					return true;
 				}
 				else {
 					//TODO por tosin [11 de out de 2016] tirar o livro da lista de emprestado e colocar o cliente como inadimplente
+					overdueList.addClient(client);
 					item.resetLoan();
+					mainFrame.populateBooks(getBooksManagement());
 					return false;
 				}
 			}
@@ -134,12 +125,23 @@ public class Controller {
 
 		int countBookClient = 0;
 		for (ManagementBook item : getBooksManagement()) {
-			if (item.getClient() != null && item.getClient().equals(client))
+			if (item.getClient() != null && item.getClient().equals(client)) {
 				countBookClient++;
+				// aproveita para ver se tem livros vencidos
+				
+				if(!Util.canRenovation(item)) {
+					overdueList.addClient(client);
+				}
+			}
 		}
 		
 		if (countBookClient >= 3)
 			return "Voce ja atingiu o limite";
+		
+		if (overdueList.consultClient(client)) {
+			
+			return "inadimplente";
+		}
 		
 		for (ManagementBook managementBook : getBooksManagement()) {
 			if (managementBook.getId() == book.getId()) {
@@ -150,6 +152,15 @@ public class Controller {
 			}
 		}
 		return "Nao foi possivel emprestar o livro";
+	}
+	
+	public static String buildTextOverdue(ClientInterface client) {
+		long time = overdueList.timeOverdue(client);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(time);
+		
+		
+		return Util.parseDate(calendar);
 	}
 
 
@@ -194,17 +205,6 @@ public class Controller {
 		if (listLoan == null)
 			listLoan = new ArrayList<>();
 		return listLoan;
-	}
-
-	/**
-	 * Lista de usuarios inadimplentes
-	 * 
-	 * @return
-	 */
-	public static List<ClientInterface> getListOverdue() {
-		if (listOverdue == null)
-			listOverdue = new ArrayList<>();
-		return listOverdue;
 	}
 	
 	public static boolean devolution (Book book) {

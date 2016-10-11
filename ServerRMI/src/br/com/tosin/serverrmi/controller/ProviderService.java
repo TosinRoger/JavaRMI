@@ -52,7 +52,7 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 			clientInterface.message("O livro nao existe");
 		}
 		else if(Controller.idOverdeu(clientInterface)) {
-			clientInterface.message("Voce nao pode empressatar livros");
+			clientInterface.message("Voce esta inadimplemente ate " + Controller.buildTextOverdue(clientInterface));
 		}
 		else if(!Controller.bookIsAvailable(book)) {
 			clientInterface.message("Livro esta emprestado, voce podera entrar a lista de espera"); 
@@ -63,6 +63,8 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 				clientInterface.message("Livro emprestado");
 			else if(done.equals("atingiu o limite"))
 				clientInterface.message("Voce ja atingui o limite de emprestimo");
+			else if(done.equals("inadimplente"))
+				clientInterface.message("Voce esta inadimplemente ate " + Controller.buildTextOverdue(clientInterface));
 			else 
 				clientInterface.message(done);
 		}
