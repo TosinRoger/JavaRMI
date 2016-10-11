@@ -202,6 +202,7 @@ public class Controller {
 				}
 				else {
 					item.setReserve();
+					item.removeReserve();
 					reservations.add(new Reservation(client, book));
 					return "Voce esta na lista de espera. Você será avisado quando o livro estiver diponível";
 				}
