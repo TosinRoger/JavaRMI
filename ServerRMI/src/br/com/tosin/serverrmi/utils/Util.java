@@ -57,51 +57,17 @@ public class Util {
 	 * @throws IOException
 	 */
 	public static List<ManagementBook> loadBooks() {
-//		String path = "";
-//		try {
-//			path = openFile();
-//			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
 
-
-//		Type typeFactory = new TypeToken<ArrayList<ManagementBook>>(){}.getType();
-//		final Gson gson = new GsonBuilder().registerTypeAdapterFactory((TypeAdapterFactory) typeFactory).create();
-		
-		
 		List<ManagementBook> books = null;
 		books = staticBook();
-//		books = gson.fromJson(path, typeFactory);
 		 
 		return books;
 	}
-	
-//	private static String openFile() throws IOException {
-//		String path = "src/database/base_book.json";
-//		String result = "";
-//		
-//		BufferedReader br = new BufferedReader(new FileReader(path));
-//		try {
-//		    StringBuilder sb = new StringBuilder();
-//		    String line = br.readLine();
-//
-//		    while (line != null) {
-//		        sb.append(line);
-//		        sb.append(System.lineSeparator());
-//		        line = br.readLine();
-//		    }
-//		    result = sb.toString();
-//		} finally {
-//		    br.close();
-//		}
-//		result = result.replaceAll("\n\r", "");
-//		result = result.replaceAll("\n", "");
-//		return result;
-//	}
 
+	/**
+	 * Criar lista estatica de livros
+	 * @return
+	 */
 	private static List<ManagementBook> staticBook() {
 		List<ManagementBook> books = new ArrayList<>();
 		books.add(new ManagementBook(1, "titulo 1", "autor 1", "Historinha 1", true, 0));
@@ -113,6 +79,11 @@ public class Util {
 		return books;
 	}
 	
+	/**
+	 * Caso o usuario queira criar mais livros esse metodo deve ser chamado
+	 * @param id
+	 * @return
+	 */
 	public static ManagementBook createNewBook(int id){
 		ManagementBook book = new ManagementBook(id, "titulo " + id, "autor " + id, "Historinha " + id, true, 0);
 		return book;

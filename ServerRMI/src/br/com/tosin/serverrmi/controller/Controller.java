@@ -13,6 +13,7 @@ import br.com.tosin.models.Book;
 import br.com.tosin.models.ManagementBook;
 import br.com.tosin.models.Reservation;
 import br.com.tosin.serverrmi.ui.MainFrame;
+import br.com.tosin.serverrmi.utils.Constants;
 import br.com.tosin.serverrmi.utils.Util;
 
 public class Controller {
@@ -32,6 +33,9 @@ public class Controller {
 		Controller.overdueList = new OverdueList();
 	}
 
+	/**
+	 * Metodo que inicia o controller
+	 */
 	public void execute() {
 
 		booksManagement = Util.loadBooks();
@@ -40,6 +44,9 @@ public class Controller {
 		registerConnection();
 	}
 
+	/**
+	 * Registar a conexao do JAVA RMI, sempre eh chamado no execute
+	 */
 	private void registerConnection() {
 		try {
 			Registry referenciaServicoNomes = LocateRegistry.createRegistry(PORT);
@@ -60,17 +67,17 @@ public class Controller {
 	 * Verifica se o cliente esta da lista de inadimplentes
 	 * 
 	 * @param client
-	 * @return
+	 * @return TRUE Cliente inadimplente, FALSE sem prendencias
 	 */
 	public static boolean idOverdeu(ClientInterface client) {
 		return overdueList.consultClient(client);
 	}
 
 	/**
-	 * Verifica se o livro esta disponivel
+	 * Verifica se o livro esta disponivel, ou seja, nao esta empresado e nao tem reservas.
 	 * 
 	 * @param book
-	 * @return
+	 * @return TRUE livro esta disponivel, FALSE o livro nao esta disponivel
 	 */
 	public static boolean bookIsAvailable(Book book) {
 		for (ManagementBook item : getBooksManagement())
@@ -84,31 +91,39 @@ public class Controller {
 	 * senao for adiciona o cliente na lista de usuario
 	 * @param client
 	 * @param book
-	 * @return
+	 * @return 0 Nao eh possivel renovar, 1 eh possivel renovar, 2 = ha uma reserva para o livro
+	 * 3 o limite de renovacoes foi atingida.
+	 * default 0
 	 */
-	public static boolean renovation(ClientInterface client, Book book) {
+	public static int renovation(ClientInterface client, Book book) {
+		
+		//verifica se tem reserva
+		if (hasReservation(book)){ 
+			return 2;
+		}
 
 		for (ManagementBook item : getBooksManagement()) {
 			if (book.getId() == item.getId() && item.getClient() != null && item.getClient().equals(client)) {
-				if (Util.canRenovation(item)) {
+				if(item.getNumRenovation() > Constants.NUM_RENOVATION) {
+					return 3;
+				}
+				else if (Util.canRenovation(item) ) {
 					item.setLoan();
 					mainFrame.populateBooks(getBooksManagement());
-					return true;
+					return 1;
 				}
 				else {
-					//TODO por tosin [11 de out de 2016] tirar o livro da lista de emprestado e colocar o cliente como inadimplente
 					overdueList.addClient(client);
-					item.resetLoan();
 					mainFrame.populateBooks(getBooksManagement());
-					return false;
+					return 0;
 				}
 			}
 		}
-		return false;
+		return 0;
 	}
 	
 	/**
-	 * Adiciona livro na lista do servidor
+	 * Adiciona livro na lista do servidor, esse metodo eh chamada pelo botao da tela para adicionar item
 	 */
 	public static void addBook() {
 		int id = getBooksManagement().size();
@@ -117,12 +132,18 @@ public class Controller {
 	
 
 	/**
-	 * usuario empresta livro
+	 * Metodo para emprestar um livro
 	 * @param client
 	 * @param book
+	 * @return uma string com a mensagem do status do emprestivo
 	 */
 	public synchronized static String loanBook(ClientInterface client, Book book) {
+		
+		//verifica se tem reserva
+		if (hasReservation(book))
+			return "O livro possui uma reserva";
 		int countBookClient = 0;
+		
 		for (ManagementBook item : getBooksManagement()) {
 			if (item.getClient() != null && item.getClient().equals(client)) {
 				countBookClient++;
@@ -134,7 +155,7 @@ public class Controller {
 			}
 		}
 		
-		if (countBookClient >= 3)
+		if (countBookClient > Constants.NUM_RENOVATION)
 			return "Voce ja atingiu o limite";
 		
 		if (overdueList.consultClient(client)) {
@@ -154,6 +175,11 @@ public class Controller {
 	}
 	
 
+	/**
+	 * Metodo de devolucao
+	 * @param book
+	 * @return TRUE livro foi devolvido, FALSE nao foi possivel devolver o livro
+	 */
 	public static boolean devolution (Book book) {
 		for (ManagementBook managementBook : getBooksManagement()) {
 			if (managementBook.getId() == book.getId()) {
@@ -166,6 +192,10 @@ public class Controller {
 		return false;
 	}
 	
+	/**
+	 * Encontro o livro que foi devolvido e verfica se tenha alguma reserva, se tiver notifica o cliente.
+	 * @param book Livro que foi devolvido
+	 */
 	private static void notifyClient(Book book) {
 		Iterator<Reservation> iterator = reservations.iterator();
 		
@@ -175,6 +205,7 @@ public class Controller {
 			if (item.getBook().getId() == book.getId()) {
 				try {
 					item.getClient().notifyBookAvaliable(book);
+					item.getClient().message("O livro " + item.getBook().getTitle() + " esta disponivel");
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -187,6 +218,13 @@ public class Controller {
 		
 	}
 
+	/**
+	 * Metodo que faz a reserva de um livro. Verifica se o livro ja esta na lista de reserva, 
+	 * se o livro ja esta empresado senao adicionar o usuario da lista de reserva.
+	 * @param client
+	 * @param book
+	 * @return Mensagem com o status da reserva, se foi possivel reservar ou nao
+	 */
 	public static String reservation(ClientInterface client, Book book) {
 		
 		for(Reservation item : reservations) {
@@ -215,6 +253,12 @@ public class Controller {
 		return "Não foi possível reservar o livro";
 	}
 	
+	/**
+	 * Atualiza o tempo de penalidade do cliente, 
+	 * com isso a penalidade sempre eh renovada ate que os livros sejam devolvidos.
+	 * @param client
+	 * @return Data em que a penalidade eh valida no formato dd/mm/yyyy HH:mm
+	 */
 	public static String buildTextOverdue(ClientInterface client) {
 		long time = overdueList.timeOverdue(client);
 		Calendar calendar = Calendar.getInstance();
@@ -224,7 +268,19 @@ public class Controller {
 		return Util.parseDate(calendar);
 	}
 	
-
+	/**
+	 * Verifica se um livro tem uma alguma reserva
+	 * @param book
+	 * @return TRUE livro tem reserva, FALSE o livro nao tem reserva
+	 */
+	private static boolean hasReservation(Book book) {
+		for(Reservation item : reservations) {
+			// livro ja esta reservado
+			if (item.getBook().getId() == book.getId())
+				return true;
+		}
+		return false;
+	}
 
 	// ===============================================================================
 	// GETTERS

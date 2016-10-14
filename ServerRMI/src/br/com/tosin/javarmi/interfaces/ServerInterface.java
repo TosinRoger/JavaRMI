@@ -2,7 +2,6 @@ package br.com.tosin.javarmi.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
 
 import br.com.tosin.models.Book;
 

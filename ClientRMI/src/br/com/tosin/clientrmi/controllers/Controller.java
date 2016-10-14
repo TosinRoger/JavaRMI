@@ -24,15 +24,14 @@ public class Controller {
 		Controller.mainClient = mainClient;
 	}
 	
+	/**
+	 * Metodo que inicia o controller
+	 */
 	public void execute() {
 		registerConnection();
 
 		try {
 			servidor.test("Essa eh minha mensagem de teste", user);
-			
-//			servidor.getBooks(user);
-
-//			servidor.getBooks(user);
 			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -40,6 +39,9 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Registar a conexao do JAVA RMI, sempre eh chamado no execute
+	 */
 	private void registerConnection() {
 		try {
 			Registry referenciaServicoNomes = LocateRegistry.getRegistry("localhost", PORT);
@@ -60,6 +62,9 @@ public class Controller {
 	// ==============================================================================
 	
 	
+	/**
+	 * Metodo de teste de conexao
+	 */
 	public void teste() {
 		try {
 			servidor.test("Testando clique", user);
@@ -69,10 +74,17 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Metodo que recebe a lista de livros da conexao e envia para ser mostrada na tela
+	 * @param books lista de livros recebida do servidor
+	 */
 	public void getBooks(List<Book> books) {
 		mainClient.populateBooks(books);
 	}
 	
+	/**
+	 * Requisita do servidor a lista de livros
+	 */
 	public void requestListBook() {
 		try {
 			servidor.getBooks(user);
@@ -82,6 +94,10 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Requisita ao servidor um emprestimo de livro
+	 * @param book livro que quer ser emprestado
+	 */
 	public void loan(Book book) {
 		try {
 			servidor.loan(user, book);
@@ -91,6 +107,10 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Envia para o servidor o livro que quer devolver
+	 * @param book livro a ser devolvido
+	 */
 	public void devolution(Book book ) {
 		try {
 			servidor.devolution(user, book);
@@ -100,6 +120,10 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Envia ao servidor o livro que pretende reservar
+	 * @param book livro a ser reservado
+	 */
 	public void reservation(Book book) {
 		try {
 			servidor.reservation(user, book);
@@ -109,6 +133,10 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Notifica o servidor que quer renovar um livro
+	 * @param book livro a ser renovado
+	 */
 	public void renovation(Book book) {
 		try {
 			servidor.renovation(user, book);
@@ -118,14 +146,26 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Mostra na tela o livro que esta disponivel
+	 * @param book
+	 */
 	public void notifyBook(Book book) {
 		mainClient.notifyBookAvailable(book);
 	}
 	
+	/**
+	 * Mostra na tela o mensagem recebida do servidor
+	 * @param msg
+	 */
 	public void showMessage(String msg) {
 		mainClient.showNotification(msg);
 	}
 	
+	/**
+	 * Lista de livro que esse usuario emprestou
+	 * @param books lista de livros emprestado
+	 */
 	public void myBooks(List<Book> books) {
 		mainClient.populateMyBooks(books);
 	}

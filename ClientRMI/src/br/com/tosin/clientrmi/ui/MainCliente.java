@@ -45,7 +45,6 @@ public class MainCliente {
 	java.util.List<Book> books;
 	java.util.List<Book> myBooks;
 	private JButton btnDevolver;
-	private JPanel panel_3;
 	private JScrollPane scrollPane_allBooks;
 	private JPanel panel_Center;
 	private JLabel lblTodosOsLivros;
@@ -264,6 +263,10 @@ public class MainCliente {
 		
 	}
 	
+	/**
+	 * Preenche a tabela como os livros emprestados
+	 * @param books
+	 */
 	public void populateMyBooks(List<Book> books) {
 		this.myBooks = books;
 		
@@ -280,11 +283,19 @@ public class MainCliente {
 		}
 	}
 	
+	/**
+	 * Mostra uma mensagem recebida do servidor
+	 * @param msg
+	 */
 	public void showNotification(String msg) {
 		notificacao.setText(msg);
 		controller.requestListBook();
 	}
 	
+	/**
+	 * Mostra uma notificacao na tela de que tem um livro disponivel
+	 * @param msg
+	 */
 	public void notifyBookAvailable(Book book) {
 		final JFrame parent = new JFrame();
 		JOptionPane.showMessageDialog(parent, "O livro " + book.getTitle() + " ja esta dipoinivel!");	}

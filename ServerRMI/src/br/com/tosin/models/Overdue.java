@@ -2,6 +2,11 @@ package br.com.tosin.models;
 
 import br.com.tosin.javarmi.interfaces.ClientInterface;
 
+/**
+ * Classe Item da lista de inadimplentes. Ela associa o cliente ao livro.
+ * @author tosin
+ *
+ */
 public class Overdue {
 	
 	private ClientInterface client;

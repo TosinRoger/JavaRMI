@@ -2,11 +2,13 @@ package br.com.tosin.models;
 
 import java.io.Serializable;
 
+/**
+ * Classe livro, possui os dados basico do livro. e.g. title, author, ....
+ * @author tosin
+ *
+ */
 public class Book implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private String title;

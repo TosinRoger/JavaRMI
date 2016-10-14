@@ -21,7 +21,10 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	/**
+	 * Metodo para testar a conexao
+	 */
 	@Override
 	public void test(String test, ClientInterface clientInterface) throws RemoteException {
 		// TODO Auto-generated method stub
@@ -29,6 +32,10 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 		clientInterface.teste("Eu, servidor, recebi seu teste");
 	}
 
+	/**
+	 * Metodo chamado pelo cliente para retornar todos os livros do servidor. 
+	 * Este metodo tambem envia todos os livros emprestados por esse cliente.
+	 */
 	@Override
 	public void getBooks(ClientInterface clientInterface) throws RemoteException {
 		// TODO Auto-generated method stub
@@ -44,6 +51,10 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 		clientInterface.listBooks(books, myBook);
 	}
 
+	/**
+	 * Metodo chamado pelo cliente para emprestar um livro
+	 * @param Book é passado o livro que ele escolheu para o emprestimo
+	 */
 	@Override
 	public void loan(ClientInterface clientInterface, Book book) throws RemoteException {
 		// TODO Auto-generated method stub
@@ -70,18 +81,33 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 		}
 	}
 
+	/**
+	 * Metodo chamado pelo cliente para fazer a renovacao do livro
+	 * @param Book é passado o livro que ele escolheu para  faze a renovacao
+	 */
 	@Override
 	public void renovation(ClientInterface clientInterface, Book book) throws RemoteException {
 		// TODO Auto-generated method stub
 		System.out.println("Server: renovation is request");
-		if(Controller.renovation(clientInterface, book)) {
+		int response = Controller.renovation(clientInterface, book);
+		if(1 == response) {
 			clientInterface.message("Livro renovado");
+		}
+		else if (response == 2){
+			clientInterface.message("O livro esta reservado");
+		}
+		else if (response == 3){
+			clientInterface.message("Voce atingiu o limite de reservas");
 		}
 		else {
 			clientInterface.message("Voce nao pode renovar o livro");
 		}
 	}
 
+	/**
+	 * Metodo chamado pelo cliente para fazer a devolucao
+	 * @param Book é passado o livro que ele escolheu para faze a devolucao
+	 */
 	@Override
 	public void devolution(ClientInterface clientInterface, Book book) throws RemoteException {
 		// TODO Auto-generated method stub
@@ -94,6 +120,11 @@ public class ProviderService extends UnicastRemoteObject implements ServerInterf
 		}
 	}
 
+	
+	/**
+	 * Metodo chamado pelo cliente para fazer a reserva de um livro
+	 * @param Book é passado o livro que ele escolheu para ser reservado
+	 */
 	@Override
 	public void reservation(ClientInterface clientInterface, Book book) throws RemoteException {
 		// TODO Auto-generated method stub
